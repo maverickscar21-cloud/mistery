@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE DAY THAT NEVER WAS // Central Paranormal Investigation Archive</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=JetBrains+Mono:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-deep: #020204;
+            --bg-surface: rgba(7, 9, 14, 0.88);
+            --border-glow: rgba(0, 243, 255, 0.28);
+            --cyan-core: #00f3ff;
+            --crimson-core: #ff2a55;
+            --amber-alert: #ffb703;
+            --uv-purple: #a855f7;
+            --text-primary: #f2f5fa;
+            --text-secondary: #9aa5b8;
+            --mono-font: 'JetBrains Mono', monospace;
+            --serif-font: 'Cinzel', serif;
+            --sans-font: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: var(--sans-font);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Cinematic CRT Scanlines */
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.42) 50%);
+            background-size: 100% 4px;
+            z-index: 998;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        /* BACKGROUND: HIGH-CONTRAST B&W ENTITY FACE */
+        .cinematic-bg-wrapper {
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            overflow: hidden;
+            background: #020204;
+        }
+
+        .cinematic-bg {
+            position: absolute;
+            top: -5%; left: -5%; width: 110%; height: 110%;
+            background-image: url('rostro.jpg'), url('https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center top;
+            filter: grayscale(100%) contrast(1.75) brightness(0.55);
+            animation: panSlow 30s infinite alternate ease-in-out;
+            transition: filter 0.15s ease;
+        }
+
+        .cinematic-bg.entity-flash {
+            filter: grayscale(100%) contrast(2.8) brightness(1.35) invert(0.08);
+        }
+
+        .cinematic-bg-wrapper::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at center, transparent 18%, rgba(2, 2, 4, 0.9) 85%),
+                linear-gradient(180deg, rgba(2, 2, 4, 0.45) 0%, rgba(2, 2, 4, 0.92) 100%);
+            pointer-events: none;
+        }
+
+        @keyframes panSlow {
+            0% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.06) translate(-1%, 1.5%); }
+            100% { transform: scale(1.12) translate(1.5%, -1%); }
+        }
+
+        #noise-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            opacity: 0.25;
+        }
+
+        /* UV Flashlight Effect */
+        #uv-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 990;
+            display: none;
+            background: radial-gradient(circle 190px at var(--mx, 50%) var(--my, 50%), rgba(168, 85, 247, 0.22), rgba(2, 2, 6, 0.93) 75%);
+        }
+
+        .uv-secret {
+            font-family: var(--mono-font);
+            font-size: 0.78rem;
+            color: rgba(168, 85, 247, 0.06);
+            letter-spacing: 2px;
+            user-select: none;
+            transition: color 0.3s, text-shadow 0.3s;
+            text-align: center;
+            padding: 0.6rem;
+        }
+
+        body.uv-active .uv-secret {
+            color: #d8b4fe;
+            text-shadow: 0 0 12px #a855f7, 0 0 24px #7e22ce;
+        }
+
+        /* Navigation */
+        header {
+            position: sticky;
+            top: 0;
+            background: rgba(3, 4, 7, 0.92);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2.5rem;
+            z-index: 100;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--crimson-core);
+            box-shadow: 0 0 12px var(--crimson-core);
+            animation: pulse-red 2s infinite ease-in-out;
+        }
+
+        .brand-title {
+            font-family: var(--serif-font);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            font-weight: 800;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            font-family: var(--mono-font);
+            font-size: 0.75rem;
+            letter-spacing: 1.2px;
+            text-decoration: none;
+            margin-left: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--cyan-core);
+        }
+
+        .hud-btn {
+            background: rgba(0, 243, 255, 0.06);
+            border: 1px solid var(--border-glow);
+            color: var(--cyan-core);
+            font-family: var(--mono-font);
+            font-size: 0.72rem;
+            padding: 7px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .hud-btn:hover, .hud-btn.active {
+            background: var(--cyan-core);
+            color: #020305;
+            font-weight: 700;
+            box-shadow: 0 0 18px rgba(0, 243, 255, 0.45);
+        }
+
+        .hud-btn.uv-btn {
+            border-color: rgba(168, 85, 247, 0.45);
+            color: #d8b4fe;
+            background: rgba(168, 85, 247, 0.08);
+        }
+
+        .hud-btn.uv-btn:hover, .hud-btn.uv-btn.active {
+            background: var(--uv-purple);
+            color: #fff;
+            box-shadow: 0 0 18px rgba(168, 85, 247, 0.6);
+        }
+
+        #audio-visualizer {
+            width: 54px;
+            height: 18px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero */
+        .hero {
+            padding: 6.5rem 0 4.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .telemetry-bar {
+            display: flex;
+            gap: 14px;
+            font-family: var(--mono-font);
+            font-size: 0.74rem;
+            color: var(--cyan-core);
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-family: var(--serif-font);
+            font-size: clamp(2.5rem, 5.8vw, 4.8rem);
+            line-height: 1.05;
+            letter-spacing: -1px;
+            color: #fff;
+            margin-bottom: 1.6rem;
+            text-transform: uppercase;
+            text-shadow: 0 4px 25px rgba(0,0,0,0.95);
+        }
+
+        .hero h1 span {
+            color: transparent;
+            -webkit-text-stroke: 1.2px var(--crimson-core);
+            text-shadow: 0 0 30px rgba(255, 42, 85, 0.55);
+        }
+
+        .hero p.lead {
+            font-size: 1.18rem;
+            color: #dbe2ef;
+            max-width: 820px;
+            font-weight: 300;
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+            text-shadow: 0 2px 14px rgba(0,0,0,0.95);
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1.2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: rgba(0, 243, 255, 0.12);
+            color: var(--cyan-core);
+            border: 1px solid var(--cyan-core);
+            font-family: var(--mono-font);
+            font-size: 0.82rem;
+            letter-spacing: 2px;
+            padding: 0.95rem 2rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+            backdrop-filter: blur(8px);
+        }
+
+        .btn-primary:hover {
+            background: var(--cyan-core);
+            color: #030508;
+            box-shadow: 0 0 35px rgba(0, 243, 255, 0.6);
+            font-weight: 700;
+        }
+
+        .btn-ghost {
+            color: #fff;
+            background: rgba(0, 0, 0, 0.55);
+            font-family: var(--mono-font);
+            font-size: 0.82rem;
+            letter-spacing: 1.5px;
+            text-decoration: none;
+            padding: 0.95rem 1.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(8px);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--crimson-core);
+            color: var(--crimson-core);
+        }
+
+        /* Live Broadcast Banner */
+        .live-broadcast {
+            margin: 3rem 0;
+            background: rgba(255, 42, 85, 0.12);
+            border: 1px solid rgba(255, 42, 85, 0.45);
+            border-left: 4px solid var(--crimson-core);
+            padding: 1.3rem 1.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .live-tag {
+            font-family: var(--mono-font);
+            font-size: 0.75rem;
+            color: var(--crimson-core);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin: 4.5rem 0 2rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-header h2 {
+            font-family: var(--serif-font);
+            font-size: 2.1rem;
+            color: #fff;
+            letter-spacing: 1px;
+            text-shadow: 0 3px 15px rgba(0,0,0,0.85);
+        }
+
+        .section-header .sub {
+            font-family: var(--mono-font);
+            font-size: 0.74rem;
+            color: var(--cyan-core);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Video Documentaries */
+        .episodes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .episode-card {
+            background: var(--bg-surface);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.3s;
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .episode-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--border-glow);
+        }
+
+        .episode-video-box {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            background: #040508;
+            overflow: hidden;
+        }
+
+        .episode-video-box iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border: 0;
+        }
+
+        /* Upcoming Episode 02 Placeholder */
+        .pending-signal-box {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(255, 42, 85, 0.12), #030407 85%);
+            border-bottom: 1px solid rgba(255, 42, 85, 0.25);
+        }
+
+        .episode-info {
+            padding: 1.8rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .ep-badge {
+            font-family: var(--mono-font);
+            font-size: 0.7rem;
+            color: var(--amber-alert);
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .episode-info h3 {
+            font-family: var(--serif-font);
+            font-size: 1.35rem;
+            color: #fff;
+            margin-bottom: 0.7rem;
+        }
+
+        .episode-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Audio Tapes */
+        .audio-archive-box {
+            background: rgba(6, 8, 12, 0.92);
+            border: 1px solid var(--border-glow);
+            padding: 2.2rem;
+            border-radius: 4px;
+            margin: 3.5rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            backdrop-filter: blur(12px);
+        }
+
+        .audio-tapes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .tape-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tape-card:hover, .tape-card.active {
+            border-color: var(--cyan-core);
+            background: rgba(0, 243, 255, 0.07);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.18);
+        }
+
+        .tape-meta {
+            font-family: var(--mono-font);
+            font-size: 0.72rem;
+            color: var(--cyan-core);
+            margin-bottom: 0.5rem;
+        }
+
+        .tape-title {
+            font-size: 1.08rem;
+            color: #fff;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            margin: 3.5rem 0 5rem 0;
+            padding-left: 2rem;
+            border-left: 2px solid rgba(0, 243, 255, 0.35);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2.2rem;
+            background: rgba(8, 10, 16, 0.78);
+            padding: 1.5rem;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(8px);
+        }
+
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -2.45rem;
+            top: 22px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--crimson-core);
+            box-shadow: 0 0 12px var(--crimson-core);
+        }
+
+        .timeline-year {
+            font-family: var(--mono-font);
+            color: var(--cyan-core);
+            font-size: 0.82rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .timeline-title {
+            font-family: var(--serif-font);
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-desc {
+            color: #c0cbd9;
+            font-size: 0.92rem;
+            max-width: 850px;
+        }
+
+        /* Case Files Gallery */
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 5rem;
+        }
+
+        .case-card {
+            background: var(--bg-surface);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: transform 0.35s ease, border-color 0.35s;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+
+        .case-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-glow);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.85);
+        }
+
+        .case-thumb {
+            height: 205px;
+            position: relative;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .case-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: contrast(1.2) brightness(0.85);
+            transition: transform 0.6s ease, filter 0.6s ease;
+        }
+
+        .case-card:hover .case-thumb img {
+            transform: scale(1.07);
+            filter: contrast(1.1) brightness(1);
+        }
+
+        .case-preview-tag {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            font-family: var(--mono-font);
+            font-size: 0.64rem;
+            background: rgba(0,0,0,0.88);
+            padding: 3px 8px;
+            border-radius: 2px;
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+
+        .tag-amber { color: var(--amber-alert); border: 1px solid var(--amber-alert); }
+        .tag-red { color: var(--crimson-core); border: 1px solid var(--crimson-core); }
+        .tag-cyan { color: var(--cyan-core); border: 1px solid var(--cyan-core); }
+
+        .case-body {
+            padding: 1.6rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .case-id {
+            font-family: var(--mono-font);
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.35rem;
+        }
+
+        .case-title {
+            font-family: var(--serif-font);
+            font-size: 1.25rem;
+            color: #fff;
+            margin-bottom: 0.7rem;
+        }
+
+        .case-desc {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            margin-bottom: 1.4rem;
+            flex: 1;
+            line-height: 1.6;
+        }
+
+        .case-btn {
+            background: transparent;
+            border: 1px dashed rgba(255, 255, 255, 0.28);
+            color: #fff;
+            font-family: var(--mono-font);
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .case-btn:hover {
+            border-color: var(--cyan-core);
+            color: var(--cyan-core);
+            background: rgba(0, 243, 255, 0.06);
+        }
+
+        /* Submission Terminal */
+        .investigation-terminal {
+            background: rgba(6, 8, 12, 0.94);
+            border: 1px solid var(--border-glow);
+            border-radius: 6px;
+            padding: 2.5rem;
+            margin-bottom: 5rem;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(12px);
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.2rem;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+            margin-bottom: 2rem;
+            font-family: var(--mono-font);
+            font-size: 0.78rem;
+            color: var(--cyan-core);
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.4rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-family: var(--mono-font);
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 0.85rem 1rem;
+            color: #fff;
+            font-family: var(--mono-font);
+            font-size: 0.82rem;
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--cyan-core);
+            box-shadow: 0 0 12px rgba(0, 243, 255, 0.25);
+        }
+
+        /* Forensic Dossier Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(12px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #080b10;
+            border: 1px solid var(--border-glow);
+            max-width: 760px;
+            width: 100%;
+            padding: 2.2rem;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.22);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-stamp {
+            position: absolute;
+            top: 22px; right: 24px;
+            border: 2px solid var(--crimson-core);
+            color: var(--crimson-core);
+            font-family: var(--mono-font);
+            font-weight: 800;
+            font-size: 0.78rem;
+            padding: 4px 10px;
+            transform: rotate(7deg);
+        }
+
+        .modal-close {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            font-family: var(--mono-font);
+            font-size: 0.9rem;
+            padding: 4px 10px;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+
+        .forensic-viewer {
+            margin: 1.2rem 0;
+            background: #000;
+            border: 1px solid rgba(0, 243, 255, 0.25);
+            padding: 10px;
+        }
+
+        .forensic-viewer img {
+            width: 100%;
+            max-height: 290px;
+            object-fit: cover;
+            display: block;
+            transition: filter 0.3s ease;
+        }
+
+        .filter-xray { filter: invert(1) contrast(1.8) hue-rotate(180deg); }
+        .filter-night { filter: sepia(1) hue-rotate(75deg) saturate(3) contrast(1.5); }
+        .filter-contrast { filter: grayscale(1) contrast(2.4) brightness(0.9); }
+
+        .redacted {
+            background: #ff2a55;
+            color: #ff2a55;
+            padding: 0 6px;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: all 0.3s;
+            user-select: none;
+        }
+        .redacted.revealed {
+            background: rgba(255, 42, 85, 0.18);
+            color: #fff;
+            border-bottom: 1px dashed var(--crimson-core);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3.5rem 2rem 3rem 2rem;
+            text-align: center;
+            font-family: var(--mono-font);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: rgba(2, 2, 4, 0.96);
+        }
+
+        .author-box {
+            margin-bottom: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 243, 255, 0.06);
+            border: 1px solid rgba(0, 243, 255, 0.35);
+            padding: 10px 26px;
+            border-radius: 4px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { opacity: 0.35; }
+            50% { opacity: 1; }
+        }
+
+        @media (max-width: 820px) {
+            header { padding: 1rem 1.2rem; }
+            nav { display: none; }
+            .form-grid { grid-template-columns: 1fr; }
+            .investigation-terminal { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- UV Flashlight Overlay -->
+    <div id="uv-overlay"></div>
+
+    <!-- CINEMATIC ENTITY FACE BACKGROUND -->
+    <div class="cinematic-bg-wrapper">
+        <div class="cinematic-bg" id="entity-bg"></div>
+    </div>
+
+    <canvas id="noise-canvas"></canvas>
+
+    <header>
+        <div class="brand">
+            <span class="status-dot"></span>
+            <span class="brand-title">The Day That Never Was</span>
+        </div>
+        <div class="header-controls">
+            <nav>
+                <a href="#hero">// HOME</a>
+                <a href="#documentaries">// DOCUMENTARIES</a>
+                <a href="#tapes">// TAPES</a>
+                <a href="#timeline">// TIMELINE</a>
+                <a href="#dossiers">// DOSSIERS</a>
+                <a href="#transmission">// REPORT</a>
+            </nav>
+            <button class="hud-btn uv-btn" id="uv-btn" onclick="toggleUV()">
+                <i class="fa-solid fa-radiation"></i> UV SCANNER
+            </button>
+            <button class="hud-btn" onclick="triggerEntityFlash()" title="Trigger spectral pulse">
+                <i class="fa-solid fa-bolt"></i> ENTITY FLASH
+            </button>
+            <div style="display:flex; align-items:center; gap:6px;">
+                <button class="hud-btn" id="audio-btn">
+                    <i class="fa-solid fa-play"></i> SYNC AUDIO
+                </button>
+                <canvas id="audio-visualizer" width="54" height="18"></canvas>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero" id="hero">
+            <div class="telemetry-bar">
+                <span>SECTOR: 09-CARACAS / NY INTERCEPT</span>
+                <span>•</span>
+                <span>FREQ: 142.85 MHz</span>
+                <span>•</span>
+                <span>STATUS: PERMANENT SURVEILLANCE</span>
+                <span>•</span>
+                <span id="timestamp-clock">SYNC...</span>
+            </div>
+            <h1>The clock didn't stop.<br><span>The world did.</span></h1>
+            <p class="lead">
+                We investigate liminal phenomena, phantom hours erased from official chronologies, and looping shortwave broadcasts. An independent public archive featuring classified testimonies from those who crossed to the other side.
+            </p>
+            <div class="hero-actions">
+                <a href="#documentaries" class="btn-primary">
+                    <i class="fa-solid fa-film"></i> WATCH INVESTIGATIONS
+                </a>
+                <a href="#dossiers" class="btn-ghost">
+                    <i class="fa-solid fa-folder-open"></i> ACCESS CLASSIFIED DOSSIERS
+                </a>
+            </div>
+        </section>
+
+        <div class="uv-secret">[HIDDEN UV TRANSMISSION // COORDINATES: 10.5414° N, 66.8856° W — DO NOT LOOK DIRECTLY AT THE WINDOW AT 03:00 AM]</div>
+
+        <!-- Active Broadcast Alert -->
+        <div class="live-broadcast">
+            <div class="live-tag">
+                <span class="status-dot"></span>
+                <span>ACTIVE FREQUENCY ALERT // 03:01 AM</span>
+            </div>
+            <div style="font-family: var(--mono-font); font-size: 0.8rem; color: #fff;">
+                Latest interference logged at Mount Avila relay tower: 18-second latency anomaly across the audible spectrum.
+            </div>
+        </div>
+
+        <!-- SECTION 1: Video Documentaries -->
+        <section id="documentaries">
+            <div class="section-header">
+                <div>
+                    <span class="sub">AUDIOVISUAL ARCHIVE RECORD</span>
+                    <h2>Video Investigations</h2>
+                </div>
+                <a href="https://youtu.be/EOXw7urWu_k" target="_blank" class="hud-btn">
+                    <i class="fa-brands fa-youtube" style="color:#ff2a55;"></i> OPEN OFFICIAL CHANNEL
+                </a>
+            </div>
+
+            <div class="episodes-grid">
+                <!-- EPISODE 01: Real YouTube Video -->
+                <div class="episode-card">
+                    <div class="episode-video-box">
+                        <iframe src="https://www.youtube.com/embed/EOXw7urWu_k?rel=0" title="Episode 01 - The Day That Never Was" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="episode-info">
+                        <div>
+                            <div class="ep-badge">
+                                <span>EPISODE 01 // ARCHIVE TRANSMISSION</span>
+                                <span style="color:var(--cyan-core);">[SIGNAL ONLINE]</span>
+                            </div>
+                            <h3>The Day That Never Was — Original File</h3>
+                            <p>Declassified documentary footage recovering the missing hours, eyewitness testimonies, and electromagnetic anomalies captured during the blackout.</p>
+                        </div>
+                        <div style="margin-top:1.2rem; display:flex; gap:10px; flex-wrap:wrap;">
+                            <a href="https://youtu.be/EOXw7urWu_k" target="_blank" class="hud-btn" style="text-decoration:none;">
+                                <i class="fa-solid fa-up-right-from-square"></i> Watch on YouTube
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EPISODE 02: Dynamic Loader for Upcoming YouTube Upload -->
+                <div class="episode-card">
+                    <div class="episode-video-box" id="ep2-video-container">
+                        <div class="pending-signal-box">
+                            <i class="fa-solid fa-satellite-dish" style="font-size:2rem; color:var(--crimson-core); margin-bottom:0.8rem;"></i>
+                            <div style="font-family:var(--mono-font); font-size:0.78rem; color:var(--cyan-core); letter-spacing:1.5px;">AWAITING UPLOAD // EPISODE 02</div>
+                            <p style="font-size:0.78rem; color:var(--text-secondary); max-width:300px; margin:0.5rem auto 1rem auto;">
+                                Paste your new YouTube link below once uploaded to mount the second investigation file live:
+                            </p>
+                            <div style="display:flex; gap:6px; width:100%; max-width:320px;">
+                                <input type="text" id="ep2-url-input" placeholder="https://youtu.be/..." class="form-control" style="padding:0.5rem 0.7rem; font-size:0.75rem; flex:1;">
+                                <button onclick="mountSecondVideo()" class="hud-btn" style="padding:0.5rem 0.9rem;">MOUNT</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="episode-info">
+                        <div>
+                            <div class="ep-badge">
+                                <span>EPISODE 02 // IN POST-PRODUCTION</span>
+                                <span id="ep2-status-tag" style="color:var(--crimson-core);">[PENDING LINK]</span>
+                            </div>
+                            <h3>The Blue Raincoat Observer</h3>
+                            <p>Repeated appearances across CCTV feeds in 7 countries during the November telecom collapse. Always standing with his back turned to the lens.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: Declassified Audio Tapes -->
+        <section id="tapes">
+            <div class="section-header">
+                <div>
+                    <span class="sub">ELECTROMAGNETIC RECORDINGS</span>
+                    <h2>Declassified Audio Tapes</h2>
+                </div>
+            </div>
+
+            <div class="audio-archive-box">
+                <p style="color: var(--text-secondary); font-size: 0.92rem; margin-bottom: 1rem;">
+                    Select a recovered magnetic tape to inspect the phonetic transcript and decibel anomaly log:
+                </p>
+
+                <div class="audio-tapes-grid">
+                    <div class="tape-card active" onclick="selectTape(this, 'TAPE #01: MOUNT AVILA INCIDENT (1994)', 'RECOVERED FROM CABLE CAR CABIN', '...nobody is up here, yet the steel cables keep vibrating. I cannot see the city lights below—only pitch-black fog and the smell of burned ozone... [TRANSMISSION CUT]')">
+                        <div class="tape-meta">LOG #T-94 // 48.2 dB</div>
+                        <div class="tape-title">Cable Car Cabin // 03:15 AM</div>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary);">Recovered with partially melted magnetic reel tape.</p>
+                    </div>
+
+                    <div class="tape-card" onclick="selectTape(this, 'TAPE #02: FREQUENCY 94.7 MHz', 'ROGUE BROADCAST WITHOUT TRANSMITTER', '...the names that follow must never be spoken indoors: Andrea V., Marco S., Julian D... born in a calendar year that has not yet occurred...')">
+                        <div class="tape-meta">LOG #T-04 // 61.9 dB</div>
+                        <div class="tape-title">Nocturnal Broadcast // Repeater C</div>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary);">Continuous loop recorded during the 2004 grid blackout.</p>
+                    </div>
+
+                    <div class="tape-card" onclick="selectTape(this, 'TAPE #03: UNTRACEABLE 911 CALL', 'METROPOLITAN DISPATCH CENTER', '...Operator: What is your location? Witness: I am standing in my living room, looking out the window, and there is only a solid black wall. No street, no sky, no stars.')">
+                        <div class="tape-meta">LOG #T-26 // 39.4 dB</div>
+                        <div class="tape-title">Emergency Call #44</div>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary);">Caller ID traced back to a landline disconnected in 1978.</p>
+                    </div>
+                </div>
+
+                <div id="tape-player-details" style="margin-top: 1.8rem; padding: 1.4rem; background: rgba(0,0,0,0.65); border: 1px dashed var(--border-glow);">
+                    <div style="font-family: var(--mono-font); color: var(--cyan-core); font-size: 0.78rem;" id="tape-player-title">TAPE #01: MOUNT AVILA INCIDENT (1994) // RECOVERED FROM CABLE CAR CABIN</div>
+                    <div style="font-size: 0.94rem; color: #fff; margin-top: 8px; font-style: italic;" id="tape-player-transcript">"...nobody is up here, yet the steel cables keep vibrating. I cannot see the city lights below—only pitch-black fog and the smell of burned ozone... [TRANSMISSION CUT]"</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: Phenomenon Timeline -->
+        <section id="timeline">
+            <div class="section-header">
+                <div>
+                    <span class="sub">COMPARATIVE TEMPORAL LOG</span>
+                    <h2>Chronology of the Anomaly</h2>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">OCTOBER 12, 1979 // 03:00 AM</div>
+                    <div class="timeline-title">The 300-Second Minute</div>
+                    <div class="timeline-desc">
+                        Synchronized atomic clocks across three continents registered an exact 4-minute drift relative to Earth's rotation. No national observatory ever issued an official explanation.
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">JUNE 24, 1994 // 11:42 PM</div>
+                    <div class="timeline-title">The Vanishing of St. Jerome Building</div>
+                    <div class="timeline-desc">
+                        An eight-story residential structure in the downtown district vanished from human sight and weather radar for 9 consecutive hours. Neighbors reported hearing whispers rising from empty asphalt.
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">NOVEMBER 03, 2012 // 05:15 AM</div>
+                    <div class="timeline-title">The Mountain Ridge Signal Echo</div>
+                    <div class="timeline-desc">
+                        Motorists driving through dense mountain fog reported repeatedly passing an identical copy of their own vehicle—driven by themselves, aged ten years older.
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">PRESENT DAY // 2026</div>
+                    <div class="timeline-title">Global Reactivation Phase</div>
+                    <div class="timeline-desc">
+                        Exponential surge in individuals recalling vivid memories of lives they never lived, alongside smartphone photographs capturing shadows cast opposite to physical light sources.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: Classified Dossiers (Including rostro.jpg + High-Contrast Forensic Photos) -->
+        <section id="dossiers">
+            <div class="section-header">
+                <div>
+                    <span class="sub">AVAILABLE CLASSIFIED CASE FILES</span>
+                    <h2>Dossiers Under Investigation</h2>
+                </div>
+            </div>
+
+            <div class="cases-grid" id="cases-container">
+                <!-- Case 01 uses the user's real rostro.jpg -->
+                <div class="case-card">
+                    <div class="case-thumb">
+                        <span class="case-preview-tag tag-red">BIOLOGICAL ANOMALY</span>
+                        <img src="rostro.jpg" onerror="this.src='https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&w=700&q=80'" alt="Entity Evidence 01">
+                    </div>
+                    <div class="case-body">
+                        <div class="case-id">DOC. 01-X // SECTOR 09</div>
+                        <h3 class="case-title">The Entity Behind the Glass</h3>
+                        <p class="case-desc">Captured on a motion-triggered trail camera inside an abandoned ward at 03:04 AM. The subject remained motionless for 41 minutes before vanishing between frames.</p>
+                        <button class="case-btn" onclick="openDossier('The Entity Behind the Glass', 'DOC. 01-X // BIOMETRIC SCAN', 'High-contrast frame extracted from SD card recovered at Site 09. Facial geometry exhibits non-human cranial symmetry and ocular reflection anomalies. Subject identity: [REDACTED: SUBJECT ZERO] last seen near [REDACTED: SUB-LEVEL 4].', 'rostro.jpg', 'https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&w=700&q=80')">INSPECT EVIDENCE [+FORENSICS]</button>
+                    </div>
+                </div>
+
+                <!-- Case 02 -->
+                <div class="case-card">
+                    <div class="case-thumb">
+                        <span class="case-preview-tag tag-cyan">TEMPORAL ANOMALY</span>
+                        <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=700&q=80" alt="Evidence 2">
+                    </div>
+                    <div class="case-body">
+                        <div class="case-id">DOC. 84-A // FLOOR 13</div>
+                        <h3 class="case-title">The Corridor of No Return</h3>
+                        <p class="case-desc">A residential elevator descends past the lowest basement level. Security cameras logged 14 hours of white noise before returning an empty cabin.</p>
+                        <button class="case-btn" onclick="openDossier('The Corridor of No Return', 'DOC. 84-A // FLOOR 13', 'During the October 14 inspection, investigators documented wet footprints ending abruptly against a solid concrete wall. Magnetic fluctuations peaked at [REDACTED: 4.8 GAUSS] near shaft #2.', 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=700&q=80', '')">INSPECT EVIDENCE [+FORENSICS]</button>
+                    </div>
+                </div>
+
+                <!-- Case 03 -->
+                <div class="case-card">
+                    <div class="case-thumb">
+                        <span class="case-preview-tag tag-amber">ENCRYPTED SIGNAL</span>
+                        <img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=700&q=80" alt="Evidence 3">
+                    </div>
+                    <div class="case-body">
+                        <div class="case-id">DOC. 04-E // NIGHT BROADCAST</div>
+                        <h3 class="case-title">Frequency 94.7 MHz</h3>
+                        <p class="case-desc">An unlicensed station broadcast a female voice reciting full names and birth dates. Over 80% of the individuals listed had not yet been born.</p>
+                        <button class="case-btn" onclick="openDossier('Frequency 94.7 MHz', 'DOC. 04-E // SIGNAL LOG', 'The recovered reel-to-reel tape lacks any readable erase-head signature. Witnesses who tuned in reported persistent auditory tinnitus for [REDACTED: 72 HOURS] following exposure.', 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=700&q=80', '')">INSPECT EVIDENCE [+FORENSICS]</button>
+                    </div>
+                </div>
+
+                <!-- Case 04 -->
+                <div class="case-card">
+                    <div class="case-thumb">
+                        <span class="case-preview-tag tag-red">CRITICAL SIGHTING</span>
+                        <img src="https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=700&q=80" alt="Evidence 4">
+                    </div>
+                    <div class="case-body">
+                        <div class="case-id">DOC. 26-Ω // DUAL SHADOW</div>
+                        <h3 class="case-title">The Reflectionless Subject</h3>
+                        <p class="case-desc">Three pedestrians photographed beneath streetlamps cast shadows angled 90 degrees away from the physical light source.</p>
+                        <button class="case-btn" onclick="openDossier('The Reflectionless Subject', 'DOC. 26-Ω // OPTICS REPORT', 'Forensic pixel analysis ruled out digital tampering. The anomalous shadows retain silhouettes wearing [REDACTED: 1940s PERIOD ATTIRE] not present at the scene.', 'https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=700&q=80', '')">INSPECT EVIDENCE [+FORENSICS]</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="uv-secret">[UV LOG #09 // IF YOU ARE READING THIS, CHECK YOUR CLOCK — DOES IT STILL SAY 03:00?]</div>
+
+        <!-- SECTION 5: Case Submission Terminal -->
+        <section class="investigation-terminal" id="transmission">
+            <div class="terminal-header">
+                <span>[ACTIVE TERMINAL: FIELD CASE SUBMISSION]</span>
+                <span>STATUS: LOCAL ARCHIVE DATABASE ONLINE</span>
+            </div>
+            <form id="anomaly-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>CASE FILE NAME / TITLE</label>
+                        <input type="text" id="case-title-input" class="form-control" placeholder="e.g., The Phantom Streetcar" required>
+                    </div>
+                    <div class="form-group">
+                        <label>DOCUMENT CODE</label>
+                        <input type="text" id="case-code-input" class="form-control" placeholder="e.g., DOC. 99-Z // NOCTURNAL" required>
+                    </div>
+                    <div class="form-group">
+                        <label>INCIDENT CATEGORY</label>
+                        <select id="case-category-input" class="form-control" style="background:#090d14;">
+                            <option value="tag-cyan">TEMPORAL ANOMALY</option>
+                            <option value="tag-amber">ENCRYPTED SIGNAL</option>
+                            <option value="tag-red">CRITICAL SIGHTING</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>EVIDENCE PHOTO URL (OPTIONAL)</label>
+                        <input type="text" id="case-img-input" class="form-control" placeholder="Leave blank for auto-assigned evidence photo">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>INCIDENT FIELD SUMMARY</label>
+                        <textarea id="case-desc-input" class="form-control" rows="3" placeholder="Describe what occurred during this anomaly..." required></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">LOG & ARCHIVE CASE FILE</button>
+            </form>
+        </section>
+    </main>
+
+    <!-- Forensic Dossier Modal -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeDossier()">✕ CLOSE FILE</button>
+            <div class="modal-stamp">CLASSIFIED</div>
+            <div style="font-family: var(--mono-font); font-size: 0.75rem; color: var(--cyan-core); margin-bottom: 0.4rem;" id="modal-id">DOC. 00-00</div>
+            <h2 style="font-family: var(--serif-font); color: #fff; font-size: 1.75rem;" id="modal-title">Title</h2>
+            
+            <!-- Forensic Image Viewer with Optical Filters -->
+            <div class="forensic-viewer">
+                <img id="modal-evidence-img" src="" alt="Forensic Evidence">
+                <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                        <button class="hud-btn" onclick="setForensicFilter('')">NORMAL</button>
+                        <button class="hud-btn" onclick="setForensicFilter('filter-xray')">X-RAY INVERT</button>
+                        <button class="hud-btn" onclick="setForensicFilter('filter-night')">NIGHT VISION</button>
+                        <button class="hud-btn" onclick="setForensicFilter('filter-contrast')">HIGH CONTRAST</button>
+                    </div>
+                    <span style="font-family:var(--mono-font); font-size:0.68rem; color:var(--text-secondary);">CLICK RED BARS TO DECLASSIFY</span>
+                </div>
+            </div>
+
+            <p style="color: #c7d2e0; line-height: 1.8; font-size: 0.95rem;" id="modal-desc">Content...</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="author-box">
+            <span style="height: 1px; width: 25px; background: rgba(0, 243, 255, 0.4);"></span>
+            <span style="font-size: 0.82rem; color: var(--cyan-core); letter-spacing: 2px;">
+                DESIGNED & DEVELOPED BY <strong style="color: #ffffff; text-shadow: 0 0 10px rgba(0, 243, 255, 0.6);">JIMMY PALACIOS</strong>
+            </span>
+            <span style="height: 1px; width: 25px; background: rgba(0, 243, 255, 0.4);"></span>
+        </div>
+        <p>© 2026 THE DAY THAT NEVER WAS // CENTRAL INVESTIGATION ARCHIVE</p>
+        <p style="margin-top: 8px; font-size: 0.72rem; opacity: 0.48; letter-spacing: 1px;">INDEPENDENT TELEMETRY & PARANORMAL ANOMALY DOCUMENTATION SYSTEM</p>
+    </footer>
+
+    <script>
+        // UTC Telemetry Clock
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('timestamp-clock').textContent = now.toTimeString().split(' ')[0] + ' UTC';
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // CRT Static Noise Canvas
+        const canvas = document.getElementById('noise-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        function drawNoise() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < 2200; i++) {
+                const x = Math.random() * width;
+                const y = Math.random() * height;
+                ctx.fillStyle = Math.random() > 0.92 ? '#ff2a55' : 'rgba(255,255,255,0.28)';
+                ctx.fillRect(x, y, 1, 1);
+            }
+            requestAnimationFrame(drawNoise);
+        }
+        drawNoise();
+
+        // Entity Face Flash Effect
+        function triggerEntityFlash() {
+            const bg = document.getElementById('entity-bg');
+            bg.classList.add('entity-flash');
+            setTimeout(() => bg.classList.remove('entity-flash'), 180);
+            setTimeout(() => bg.classList.add('entity-flash'), 260);
+            setTimeout(() => bg.classList.remove('entity-flash'), 420);
+        }
+        setInterval(() => {
+            if (Math.random() > 0.65) triggerEntityFlash();
+        }, 16000);
+
+        // UV Scanner Flashlight
+        let uvActive = false;
+        const uvOverlay = document.getElementById('uv-overlay');
+        function toggleUV() {
+            uvActive = !uvActive;
+            document.body.classList.toggle('uv-active', uvActive);
+            document.getElementById('uv-btn').classList.toggle('active', uvActive);
+            uvOverlay.style.display = uvActive ? 'block' : 'none';
+        }
+        window.addEventListener('mousemove', (e) => {
+            if (!uvActive) return;
+            uvOverlay.style.setProperty('--mx', e.clientX + 'px');
+            uvOverlay.style.setProperty('--my', e.clientY + 'px');
+        });
+
+        // Dynamic Mount for Episode 02 YouTube Video
+        function mountSecondVideo() {
+            const rawUrl = document.getElementById('ep2-url-input').value.trim();
+            if (!rawUrl) return;
+            let videoId = "";
+            const match = rawUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/);
+            if (match && match[1]) {
+                videoId = match[1];
+            } else if (rawUrl.length === 11) {
+                videoId = rawUrl;
+            }
+            if (!videoId) {
+                alert("Please enter a valid YouTube link (e.g., https://youtu.be/...)");
+                return;
+            }
+            document.getElementById('ep2-video-container').innerHTML = `
+                <iframe src="https://www.youtube.com/embed/${videoId}?rel=0" title="Episode 02" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            `;
+            const statusTag = document.getElementById('ep2-status-tag');
+            statusTag.textContent = "[SIGNAL ONLINE]";
+            statusTag.style.color = "var(--cyan-core)";
+        }
+
+        // Audio Tape Selector
+        function selectTape(el, title, subtitle, transcript) {
+            document.querySelectorAll('.tape-card').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('tape-player-title').textContent = title + ' // ' + subtitle;
+            document.getElementById('tape-player-transcript').textContent = '"' + transcript + '"';
+        }
+
+        // Audio Player (Uses local terror.mp3 with WebAudio fallback + live oscilloscope)
+        const ambientAudio = new Audio('terror.mp3');
+        ambientAudio.loop = true;
+        let isAudioPlaying = false;
+        let fallbackCtx = null;
+        let fallbackOsc = null;
+
+        const vizCanvas = document.getElementById('audio-visualizer');
+        const vizCtx = vizCanvas.getContext('2d');
+
+        function drawVisualizer() {
+            vizCtx.clearRect(0, 0, vizCanvas.width, vizCanvas.height);
+            vizCtx.strokeStyle = isAudioPlaying ? '#00f3ff' : 'rgba(0, 243, 255, 0.25)';
+            vizCtx.lineWidth = 1.4;
+            vizCtx.beginPath();
+            for (let x = 0; x < vizCanvas.width; x += 3) {
+                const amp = isAudioPlaying ? (Math.random() * 12 - 6) : 0;
+                const y = (vizCanvas.height / 2) + amp;
+                if (x === 0) vizCtx.moveTo(x, y);
+                else vizCtx.lineTo(x, y);
+            }
+            vizCtx.stroke();
+            requestAnimationFrame(drawVisualizer);
+        }
+        drawVisualizer();
+
+        document.getElementById('audio-btn').addEventListener('click', () => {
+            const btn = document.getElementById('audio-btn');
+            if (!isAudioPlaying) {
+                ambientAudio.play().then(() => {
+                    btn.innerHTML = '<i class="fa-solid fa-stop"></i> MUTE AUDIO';
+                    btn.classList.add('active');
+                    isAudioPlaying = true;
+                }).catch(() => {
+                    // Fallback dark ambient drone if terror.mp3 is not in folder
+                    fallbackCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    fallbackOsc = fallbackCtx.createOscillator();
+                    const gain = fallbackCtx.createGain();
+                    fallbackOsc.type = 'sawtooth';
+                    fallbackOsc.frequency.value = 55;
+                    gain.gain.value = 0.04;
+                    fallbackOsc.connect(gain);
+                    gain.connect(fallbackCtx.destination);
+                    fallbackOsc.start();
+                    btn.innerHTML = '<i class="fa-solid fa-stop"></i> MUTE AUDIO';
+                    btn.classList.add('active');
+                    isAudioPlaying = true;
+                });
+            } else {
+                ambientAudio.pause();
+                ambientAudio.currentTime = 0;
+                if (fallbackOsc) {
+                    fallbackOsc.stop();
+                    fallbackOsc = null;
+                }
+                btn.innerHTML = '<i class="fa-solid fa-play"></i> SYNC AUDIO';
+                btn.classList.remove('active');
+                isAudioPlaying = false;
+            }
+        });
+
+        // Forensic Dossier Modal with Redacted Text & Optical Filters
+        function openDossier(title, id, desc, imgSrc, fallbackSrc) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-id').textContent = id;
+            const imgEl = document.getElementById('modal-evidence-img');
+            imgEl.className = '';
+            imgEl.src = imgSrc;
+            if (fallbackSrc) {
+                imgEl.onerror = () => { imgEl.src = fallbackSrc; };
+            }
+            // Convert [REDACTED: ...] into interactive clickable censorship bars
+            const formattedDesc = desc.replace(/\[REDACTED:(.*?)\]/g, '<span class="redacted" onclick="this.classList.toggle(\'revealed\')">$1</span>');
+            document.getElementById('modal-desc').innerHTML = formattedDesc;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function setForensicFilter(cls) {
+            document.getElementById('modal-evidence-img').className = cls;
+        }
+
+        function closeDossier() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // LocalStorage Case Submission
+        const casesContainer = document.getElementById('cases-container');
+        const form = document.getElementById('anomaly-form');
+
+        function loadCustomCases() {
+            const saved = JSON.parse(localStorage.getItem('investigation_cases_en') || '[]');
+            saved.forEach(item => renderCaseCard(item, false));
+        }
+
+        function renderCaseCard(c, prepend = true) {
+            const card = document.createElement('div');
+            card.className = 'case-card';
+            const tagText = c.tag === 'tag-red' ? 'CRITICAL SIGHTING' : (c.tag === 'tag-amber' ? 'ENCRYPTED SIGNAL' : 'TEMPORAL ANOMALY');
+            const imgSrc = c.img || 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=700&q=80';
+
+            card.innerHTML = `
+                <div class="case-thumb">
+                    <span class="case-preview-tag ${c.tag}">${tagText}</span>
+                    <img src="${imgSrc}" alt="${c.title}">
+                </div>
+                <div class="case-body">
+                    <div class="case-id">${c.code}</div>
+                    <h3 class="case-title">${c.title}</h3>
+                    <p class="case-desc">${c.desc}</p>
+                    <button class="case-btn" onclick="openDossier('${c.title.replace(/'/g, "\\'")}', '${c.code.replace(/'/g, "\\'")}', '${c.desc.replace(/'/g, "\\'")}', '${imgSrc}', '')">INSPECT EVIDENCE [+FORENSICS]</button>
+                </div>
+            `;
+
+            if (prepend) {
+                casesContainer.prepend(card);
+            } else {
+                casesContainer.appendChild(card);
+            }
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = document.getElementById('case-title-input').value;
+            const code = document.getElementById('case-code-input').value;
+            const tag = document.getElementById('case-category-input').value;
+            let img = document.getElementById('case-img-input').value.trim();
+            const desc = document.getElementById('case-desc-input').value;
+
+            if (!img) {
+                img = 'https://images.unsplash.com/photo-1509114397022-ed747cca3f65?auto=format&fit=crop&w=700&q=80';
+            }
+
+            const newCase = { title, code, tag, img, desc };
+            const currentList = JSON.parse(localStorage.getItem('investigation_cases_en') || '[]');
+            currentList.unshift(newCase);
+            localStorage.setItem('investigation_cases_en', JSON.stringify(currentList));
+
+            renderCaseCard(newCase, true);
+            alert('CASE FILE ARCHIVED // The incident has been logged locally and added to the board.');
+            form.reset();
+        });
+
+        loadCustomCases();
+    </script>
+</body>
+</html>
